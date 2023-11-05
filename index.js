@@ -25,7 +25,6 @@ async function run() {
     const serviceCollection = client.db("ServiceDB").collection("services");
 
     app.get("/services", async (req, res) => {
-      const query = req.body;
       console.log(query);
       const result = await serviceCollection.find().toArray();
       res.send(result);
