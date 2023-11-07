@@ -49,6 +49,24 @@ async function run() {
       res.send(result);
     });
 
+    app.put("/services/update/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const updateService = req.body;
+      const updateDoc = {
+        $set: {
+          photo: updateService.photo,
+          serviceName: updateService.serviceName,
+          price: updateService.price,
+          serviceArea: updateService.serviceArea,
+
+          description: updateService.description,
+        },
+      };
+      const result = await serviceCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    });
+
     // bookings
 
     app.get("/bookings", async (req, res) => {
