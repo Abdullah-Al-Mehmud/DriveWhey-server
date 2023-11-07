@@ -27,7 +27,12 @@ async function run() {
 
     // services
     app.get("/services", async (req, res) => {
-      const result = await serviceCollection.find().toArray();
+      // if user emails matches only users data will show and if do not matches all data will be shown
+      let query = {};
+      if (req.query?.email) {
+        query = { email: req.query.email };
+      }
+      const result = await serviceCollection.find(query).toArray();
       res.send(result);
     });
 
