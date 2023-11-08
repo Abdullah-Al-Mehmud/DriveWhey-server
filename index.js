@@ -67,6 +67,13 @@ async function run() {
       res.send(result);
     });
 
+    app.delete("/services/delete/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await serviceCollection.deleteOne(query);
+      res.send(result);
+    });
+
     // bookings
 
     app.get("/bookings", async (req, res) => {
