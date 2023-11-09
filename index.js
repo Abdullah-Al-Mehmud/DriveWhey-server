@@ -3,7 +3,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 const cors = require("cors");
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 
 // middleware
 app.use(cors());
@@ -24,13 +24,16 @@ async function run() {
   try {
     const serviceCollection = client.db("ServiceDB").collection("services");
     const bookingCollection = client.db("ServiceDB").collection("bookings");
+    const reviewCollection = client.db("ServiceDB").collection("review");
 
     // services
     app.get("/services", async (req, res) => {
       // if user emails matches only users data will show and if do not matches all data will be shown
       let query = {};
       if (req.query?.email) {
-        query = { email: req.query.email };
+        query = {
+          providerEmail: req.query.email,
+        };
       }
       const result = await serviceCollection.find(query).toArray();
       res.send(result);
@@ -78,8 +81,8 @@ async function run() {
 
     app.get("/bookings", async (req, res) => {
       let query = {};
-      if (req.query?.email) {
-        query = { email: req.query.email };
+      if (req.query.bookingEmail) {
+        query = { bookingEmail: req.query.bookingEmail };
       }
       const result = await bookingCollection.find(query).toArray();
       res.send(result);
@@ -88,6 +91,19 @@ async function run() {
     app.post("/bookings", async (req, res) => {
       const booking = req.body;
       const result = await bookingCollection.insertOne(booking);
+      res.send(result);
+    });
+
+    // review
+
+    app.get("/review", async (req, res) => {
+      const result = await reviewCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.post("/review", async (req, res) => {
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
       res.send(result);
     });
 
